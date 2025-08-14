@@ -1,0 +1,10 @@
+spring:
+  devtools:
+    restart:
+      enabled: true
+  profiles:
+    active: dev  # Activates the 'dev' profile (uses application-dev.yml)
+logging:
+  level:
+    root: INFO  # Sets the global log level to INFO (overrides DEBUG for system packages)
+    com.chatApplication.wireline: DEBUG

@@ -1,0 +1,19 @@
+
+services:
+  backend:
+    build: ./wireline-backend
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./wireline-backend/.env
+    restart: always
+    container_name: wireline-backend
+
+  frontend:
+    build: ./wireline-frontend
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./wireline-frontend/.env
+    restart: always
+    container_name: wireline-frontend

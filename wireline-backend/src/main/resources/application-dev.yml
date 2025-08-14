@@ -1,0 +1,38 @@
+spring:
+  config:
+    import: optional:.env
+  devtools:
+    restart:
+      enabled : true
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      username: default
+      password: ${REDIS_PASSWORD}
+      ssl:
+        enabled: true
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP}
+    properties:
+      security.protocol: SASL_SSL
+      sasl.mechanism: PLAIN
+      sasl.jaas.config: >
+        org.apache.kafka.common.security.plain.PlainLoginModule required
+        username="${KAFKA_USERNAME}"
+        password="${KAFKA_PASSWORD}";
+    consumer:
+      group-id: wireline-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+jwt:
+  secret: ${JWT_SECRET}
+  expirationMs: ${JWT_EXPIRATION_MS}
