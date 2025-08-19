@@ -18,7 +18,7 @@ import com.chatApplication.wireline.model.User;
 import com.chatApplication.wireline.service.UserService;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserController {
 
     @Autowired
