@@ -8,6 +8,7 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 
@@ -28,8 +29,7 @@ public class RedisConfig {
     @Bean
     public RedisConnectionFactory redisConnectionFactory(){
 
-        // System.out.println("******* Redis Host Details********");
-        // System.out.println("Host :" + redisHost);
+       
 
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(redisHost, redisPort);
         config.setUsername("default");
@@ -43,8 +43,16 @@ public class RedisConfig {
     
     @Bean
     public RedisTemplate<String, String> redisTemplate(){
+
+        StringRedisSerializer str = new StringRedisSerializer();
         RedisTemplate<String, String> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory());
+
+        template.setKeySerializer(str);
+        template.setHashKeySerializer(str);
+        template.setValueSerializer(str);
+        template.setDefaultSerializer(str);
+        template.afterPropertiesSet();
         return template;
 
     }

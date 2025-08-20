@@ -30,14 +30,19 @@ public class AuthenticationService {
 
     public AuthenticationResponse login(AuthenticationRequest request)
     {
-        Optional<User> user_opt = userRepository.findByEmail(request.getEmail());
-        User user = user_opt.get();
+        Optional<User> userOpt = userRepository.findByEmail(request.getEmail());
 
-        System.out.println("User name:" + user.getUsername());
+        User user = null;
+        
 
-        if(user_opt.isEmpty())
+        if( userOpt.isEmpty())
         {
             return new AuthenticationResponse("Invalid Email");
+        }
+
+        if(userOpt.isPresent())
+        {
+            user = userOpt.get();
         }
        
         if(!passwordEncoder.matches(request.getPassword(), user.getPassword()))
@@ -46,6 +51,8 @@ public class AuthenticationService {
         }
 
         String sessionId = UUID.randomUUID().toString();
+        System.Logger logger = System.getLogger(AuthenticationService.class.getName());
+        logger.log(System.Logger.Level.INFO, "Session ID: " + sessionId + "\t User name:"+ user.getUsername());
         
         redisTemplate.opsForValue().set(sessionId,user.getId(), 24,TimeUnit.HOURS);
 
@@ -55,6 +62,10 @@ public class AuthenticationService {
 
     public boolean logout(String sessionId)
     {
+        if(sessionId == null || sessionId.isEmpty())
+        {
+            throw new IllegalArgumentException("Session ID cannot be null or empty");
+        }
         return Boolean.TRUE.equals(redisTemplate.delete(sessionId));
     }
 }
